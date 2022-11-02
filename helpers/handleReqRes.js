@@ -42,7 +42,7 @@ handlers.handleReqRes = (req, res) => {
     // choice handle
     const chocsenHandler = routes[trimedPath] ? routes[trimedPath] : notFoundHanler
     chocsenHandler(requestProperties, (statusCode, payload) => {
-        statusCode = typeof (statusCode) === 'number' ? statusCode : 500 ;
+        statusCode = typeof (statusCode) === 'number' ? statusCode : 500;
         payload = typeof (payload) === 'object' ? payload : {};
 
         const payloadString = JSON.stringify(payload);
