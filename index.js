@@ -7,23 +7,23 @@
 
 // defendences
 const http = require('http');
-const {handleReqRes} = require('./helpers/handleReqRes')
+const {handleReqRes} = require('./helpers/handleReqRes');
+const enviroment = require('./helpers/enviroments');
 
 
 // scaffolding - object module
 const app = {};
 
-// create confiq
 app.confiq = {
-    port: 5000
-};
+    port: 3000
+}
 
 app.createServer = () => {
     // create server
     const server = http.createServer(app.handleReqRes);
-    server.listen(app.confiq.port, () => {
+    server.listen(enviroment.port, () => {
         // when server start 
-        console.log(`listing port ${app.confiq.port} started`)
+        console.log(`listing port ${enviroment.port} started`)
     })
 }
 
