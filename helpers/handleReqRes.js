@@ -9,9 +9,7 @@
 const url = require('url');
 const { StringDecoder } = require('string_decoder');
 const routes = require('../routes');
-const { sampleHandler } = require('../handlers/sampleHandler');
 const { notFoundHanler } = require('../handlers/notFoundHandle');
-const { STATUS_CODES } = require('http');
 
 // scaffolding object 
 const handlers = {};
@@ -41,20 +39,21 @@ handlers.handleReqRes = (req, res) => {
 
     // choice handle
     const chocsenHandler = routes[trimedPath] ? routes[trimedPath] : notFoundHanler
-    chocsenHandler(requestProperties, (statusCode, payload) => {
-        statusCode = typeof (statusCode) === 'number' ? statusCode : 500;
-        payload = typeof (payload) === 'object' ? payload : {};
 
-        const payloadString = JSON.stringify(payload);
-
-        //return final response
-        res.writeHead(statusCode);
-        res.end(payloadString);
-    })
 
 
     let realData = ''
     req.on('data', (buffer) => {
+        chocsenHandler(requestProperties, (statusCode, payload) => {
+            statusCode = typeof (statusCode) === 'number' ? statusCode : 500;
+            payload = typeof (payload) === 'object' ? payload : {};
+
+            const payloadString = JSON.stringify(payload);
+
+            //return final response
+            res.writeHead(statusCode);
+            res.end(payloadString);
+        })
         realData += decoder.write(buffer)
     })
 
