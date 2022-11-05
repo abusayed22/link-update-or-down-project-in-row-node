@@ -14,9 +14,6 @@ const enviroment = require('./helpers/enviroments');
 // scaffolding - object module
 const app = {};
 
-app.confiq = {
-    port: 3000
-}
 
 app.createServer = () => {
     // create server
@@ -28,6 +25,7 @@ app.createServer = () => {
 }
 
 app.handleReqRes = handleReqRes;
+// this line will clear tommorow
 
 // calling for run
 app.createServer();
