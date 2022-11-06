@@ -7,7 +7,7 @@
 
 // defendences
 const http = require('http');
-const {handleReqRes} = require('./helpers/handleReqRes');
+const { handleReqRes } = require('./helpers/handleReqRes');
 const enviroment = require('./helpers/enviroments');
 const lib = require('./lib/data');
 
@@ -28,7 +28,7 @@ app.createServer = () => {
 app.handleReqRes = handleReqRes;
 // this line will clear tommorow
 
-lib.update('test', 'newfile', {name: 'abu sayed',age: 26},(err, result) => {
+lib.update('test', 'newfile', { name: 'abu sayed', age: 26 }, (err, result) => {
     console.log(err, result)
 })
 
