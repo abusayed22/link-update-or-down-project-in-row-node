@@ -28,8 +28,8 @@ app.createServer = () => {
 app.handleReqRes = handleReqRes;
 // this line will clear tommorow
 
-lib.update('test', 'newfile', { name: 'abu sayed', age: 26 }, (err, result) => {
-    console.log(err, result)
+lib.delete('test', 'newfile', (err) => {
+    console.log(err)
 })
 
 
