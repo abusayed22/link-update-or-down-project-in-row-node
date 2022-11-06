@@ -9,6 +9,7 @@
 const http = require('http');
 const {handleReqRes} = require('./helpers/handleReqRes');
 const enviroment = require('./helpers/enviroments');
+const lib = require('./lib/data');
 
 
 // scaffolding - object module
@@ -26,6 +27,10 @@ app.createServer = () => {
 
 app.handleReqRes = handleReqRes;
 // this line will clear tommorow
+
+lib.read('test', 'newfile', (err, result) => {
+    console.log(err, result)
+})
 
 // calling for run
 app.createServer();
