@@ -28,9 +28,11 @@ app.createServer = () => {
 app.handleReqRes = handleReqRes;
 // this line will clear tommorow
 
-lib.read('test', 'newfile', (err, result) => {
+lib.update('test', 'newfile', {name: 'abu sayed',age: 26},(err, result) => {
     console.log(err, result)
 })
+
+
 
 // calling for run
 app.createServer();
