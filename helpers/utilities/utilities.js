@@ -6,6 +6,8 @@
 */
 
 // dependcies
+const crypto = require('crypto');
+const enviroments = require('../enviroments')
 
 
 
@@ -20,6 +22,19 @@ utilities.jsonformat = (strjson) => {
         output = {}
     }
     return output;
+}
+
+// hashing anything
+utilities.hashing = (str) => {
+    if(typeof(str) === 'string' && str.length > 0) {
+        
+        console.log(enviroments, process.env.ENB_NODE)
+        const hash = crypto.createHmac('sha256', enviroments.hashingKey )
+        .update(str)
+        .digest('hex');
+
+        return hash;
+    }
 }
 
 

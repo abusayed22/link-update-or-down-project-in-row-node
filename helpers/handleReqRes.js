@@ -65,12 +65,8 @@ handlers.handleReqRes = (req, res) => {
             res.setHeader('content-type','application/json')
             res.writeHead(statusCode);
             res.end(payloadString);
-        })
-        // response handle
-        res.end('Hello programer')
-    })
-
-
+        });
+    });
 };
 
 module.exports = handlers;

@@ -13,11 +13,13 @@ const enviroments = {};
 
 enviroments.developing = {
     port: 3000,
-    envName: 'developing'
+    envName: 'developing',
+    hashingKey: 'taebsctd'
 }
 enviroments.production = {
     port: 5000,
-    envName: 'production'
+    envName: 'production',
+    hashingKey: 'parbocsdoenfaglk'
 }
 
 // detarmind which enviroment was passed
