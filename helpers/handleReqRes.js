@@ -10,6 +10,7 @@ const url = require('url');
 const { StringDecoder } = require('string_decoder');
 const routes = require('../routes');
 const { notFoundHanler } = require('../handlers/notFoundHandle');
+const {jsonformat} = require('./utilities/utilities')
 
 // scaffolding object 
 const handlers = {};
@@ -50,6 +51,10 @@ handlers.handleReqRes = (req, res) => {
 
     req.on('end', () => {
         realData += decoder.end();
+
+        //
+        requestProperties.body = jsonformat(realData);
+
         chocsenHandler(requestProperties, (statusCode, payload) => {
             statusCode = typeof (statusCode) === 'number' ? statusCode : 500;
             payload = typeof (payload) === 'object' ? payload : {};
@@ -57,6 +62,7 @@ handlers.handleReqRes = (req, res) => {
             const payloadString = JSON.stringify(payload);
 
             //return final response
+            res.setHeader('content-type','application/json')
             res.writeHead(statusCode);
             res.end(payloadString);
         })

@@ -28,9 +28,6 @@ app.createServer = () => {
 app.handleReqRes = handleReqRes;
 // this line will clear tommorow
 
-lib.delete('test', 'newfile', (err) => {
-    console.log(err)
-})
 
 
 
