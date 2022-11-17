@@ -73,7 +73,6 @@ handler._token.post = (requestProparties, callBack) => {
 };
 
 
-// @TODO: Authentication
 handler._token.get = (requestProparties, callBack) => {
     const id =
         typeof requestProparties.queryString.id === 'string' &&
@@ -99,7 +98,6 @@ handler._token.get = (requestProparties, callBack) => {
     }
 };
 
-// @TODO: Authentication
 handler._token.put = (requestProparties, callBack) => {
     const id =
         typeof requestProparties.body.id === 'string' &&
@@ -133,7 +131,6 @@ handler._token.put = (requestProparties, callBack) => {
 
 };
 
-// @Todo authentication
 handler._token.delete = (requestProparties, callBack) => {
     const id =
         typeof requestProparties.queryString.id === 'string' &&
@@ -159,5 +156,22 @@ handler._token.delete = (requestProparties, callBack) => {
         })
     }
 };
+
+
+// token verify
+handler._token.verify = (id,phone,callBack) => {
+    data.read('tokens',id,(err,tokenData) => {
+        if(!err && tokenData) {
+            if(jsonformat(tokenData).phone === phone && jsonformat(tokenData).expires > Date.now()){
+                callBack(true)
+            }else {
+                callBack(false)
+            }
+        }else{
+            callBack(false)
+        }
+    })
+}
+
 
 module.exports = handler;

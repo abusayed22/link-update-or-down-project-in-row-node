@@ -173,7 +173,7 @@ handler._users.put = (requestProparties, callBack) => {
     }
 };
 
-// @Todo authentication
+// @TODO: authentication
 handler._users.delete = (requestProparties, callBack) => {
     const phone =
     typeof requestProparties.queryString.phone === "string" &&
