@@ -26,6 +26,7 @@ handler.userHandler = (requestProparties, callBack) => {
 // service _ use
 handler._users = {};
 
+// is public route for any clind 
 handler._users.post = (requestProparties, callBack) => {
     const name =
         typeof requestProparties.body.name === "string" &&
@@ -64,7 +65,7 @@ handler._users.post = (requestProparties, callBack) => {
                             message: "User created successfully!",
                         });
                     } else {
-                        false;
+                       return false;
                     }
                 });
             } else {
@@ -76,7 +77,8 @@ handler._users.post = (requestProparties, callBack) => {
     }
 };
 
-//@:TODO get method not working
+
+// @TODO: Authentication
 handler._users.get = (requestProparties, callBack) => {
     // check the specific identier of phone number
     const phone =
@@ -104,6 +106,7 @@ handler._users.get = (requestProparties, callBack) => {
     }
 };
 
+// @TODO: Authentication
 handler._users.put = (requestProparties, callBack) => {
     const name =
         typeof requestProparties.body.name === "string" &&
@@ -147,7 +150,7 @@ handler._users.put = (requestProparties, callBack) => {
                         if (!err2) {
                             callBack(200, userData)
                         } else {
-                            callback(500, {
+                            callBack(500, {
                                 error: 'There was a problem in the server side!',
                             });
                         }
@@ -170,6 +173,7 @@ handler._users.put = (requestProparties, callBack) => {
     }
 };
 
+// @Todo authentication
 handler._users.delete = (requestProparties, callBack) => {
     const phone =
     typeof requestProparties.queryString.phone === "string" &&
