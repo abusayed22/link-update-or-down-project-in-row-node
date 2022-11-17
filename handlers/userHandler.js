@@ -8,7 +8,8 @@
 // defendencies
 const data = require("../lib/data");
 const { hashing } = require("../helpers/utilities/utilities");
-const { jsonformat } = require('../helpers/utilities/utilities')
+const { jsonformat } = require('../helpers/utilities/utilities');
+const { _token } = require('./tokenHandlers')
 
 // scaffoding - object module
 const handler = {};
@@ -65,7 +66,7 @@ handler._users.post = (requestProparties, callBack) => {
                             message: "User created successfully!",
                         });
                     } else {
-                       return false;
+                        return false;
                     }
                 });
             } else {
@@ -88,14 +89,23 @@ handler._users.get = (requestProparties, callBack) => {
             : false;
 
     if (phone) {
-        data.read('users', phone, (err, u) => {
-            const userData = { ...jsonformat(u) }
-            if (!err && userData) {
-                delete userData.password;
-                callBack(200, userData);
+        const token = typeof requestProparties.headersObject.token === 'string' ? requestProparties.headersObject.token : false
+        _token.verify(token, phone, (iftrue) => {
+            if (iftrue) {
+                data.read('users', phone, (err, u) => {
+                    const userData = { ...jsonformat(u) }
+                    if (!err && userData) {
+                        delete userData.password;
+                        callBack(200, userData);
+                    } else {
+                        callBack(404, {
+                            error: 'Requested user was not found!!!'
+                        })
+                    }
+                })
             } else {
-                callBack(404, {
-                    error: 'Requested user was not found!!!'
+                callBack(403, {
+                    'error': 'Authentication failure!'
                 })
             }
         })
@@ -131,33 +141,42 @@ handler._users.put = (requestProparties, callBack) => {
 
     if (phone) {
         if (name || addreess || password) {
-            data.read('users', phone, (err, user) => {
-                const userData = { ...jsonformat(user) }
-                /* they are same problem @userData undefind */
-                if (!err && userData) {
-                    if (name) {
-                        userData.name = name
-                    }
-                    if (addreess) {
-                        userData.addreess = addreess
-                    }
-                    if (password) {
-                        userData.password = hashing(password)
-                    }
+            const token = typeof requestProparties.headersObject.token === "string" ? requestProparties.headersObject.token : false
+            _token.verify(token, phone, (iftrue) => {
+                if (iftrue) {
+                    data.read('users', phone, (err, user) => {
+                        const userData = { ...jsonformat(user) }
+                        /* they are same problem @userData undefind */
+                        if (!err && userData) {
+                            if (name) {
+                                userData.name = name
+                            }
+                            if (addreess) {
+                                userData.addreess = addreess
+                            }
+                            if (password) {
+                                userData.password = hashing(password)
+                            }
 
-                    // update to database
-                    data.update('users', phone, userData, (err2) => {
-                        if (!err2) {
-                            callBack(200, userData)
+                            // update to database
+                            data.update('users', phone, userData, (err2) => {
+                                if (!err2) {
+                                    callBack(200, userData)
+                                } else {
+                                    callBack(500, {
+                                        error: 'There was a problem in the server side!',
+                                    });
+                                }
+                            })
                         } else {
-                            callBack(500, {
-                                error: 'There was a problem in the server side!',
-                            });
+                            callBack(400, {
+                                'error': 'there was a problem in sever side!!!'
+                            })
                         }
                     })
                 } else {
-                    callBack(400, {
-                        'error': 'there was a problem in sever side!!!'
+                    callBack(403, {
+                        'error': 'Authentication failure!'
                     })
                 }
             })
@@ -173,34 +192,42 @@ handler._users.put = (requestProparties, callBack) => {
     }
 };
 
-// @TODO: authentication
 handler._users.delete = (requestProparties, callBack) => {
     const phone =
-    typeof requestProparties.queryString.phone === "string" &&
-        requestProparties.queryString.phone.trim().length === 11
-        ? requestProparties.queryString.phone
-        : false;
+        typeof requestProparties.queryString.phone === "string" &&
+            requestProparties.queryString.phone.trim().length === 11
+            ? requestProparties.queryString.phone
+            : false;
 
-    if(phone) {
-        data.read('users',phone, (err) => {
-            if(!err) {
-                data.delete('users',phone, (err2) => {
-                    if(!err2) {
-                        callBack(200, {
-                            'message': 'deleted was successfully!'
-                        })
-                    } else {
-                        callBack(404,{
-                            'error': 'your delete requested was not found!'
-                        })
-                    }
-                })
-            } else  {
-                callBack(404,{
-                    'error': 'your delete requested was not found!!!'
-                })
-            }
-        })
+    if (phone) {
+        const token = typeof requestProparties.headersObject.token === "string" ? requestProparties.headersObject.token : false
+            _token.verify(token, phone, (iftrue) => {
+                if (iftrue) {
+                    data.read('users', phone, (err) => {
+                        if (!err) {
+                            data.delete('users', phone, (err2) => {
+                                if (!err2) {
+                                    callBack(200, {
+                                        'message': 'deleted was successfully!'
+                                    })
+                                } else {
+                                    callBack(404, {
+                                        'error': 'your delete requested was not found!'
+                                    })
+                                }
+                            })
+                        } else {
+                            callBack(404, {
+                                'error': 'your delete requested was not found!!!'
+                            })
+                        }
+                    })
+                } else {
+                    callBack(403, {
+                        'error': 'Authentication failure!'
+                    })
+                }
+            })
     }
 };
 

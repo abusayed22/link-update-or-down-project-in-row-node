@@ -158,16 +158,16 @@ handler._token.delete = (requestProparties, callBack) => {
 };
 
 
-// token verify
-handler._token.verify = (id,phone,callBack) => {
-    data.read('tokens',id,(err,tokenData) => {
-        if(!err && tokenData) {
-            if(jsonformat(tokenData).phone === phone && jsonformat(tokenData).expires > Date.now()){
+// token verify (ulitility)
+handler._token.verify = (id, phone, callBack) => {
+    data.read('tokens', id, (err, tokenData) => {
+        if (!err && tokenData) {
+            if (jsonformat(tokenData).phone === phone && jsonformat(tokenData).expires > Date.now()) {
                 callBack(true)
-            }else {
+            } else {
                 callBack(false)
             }
-        }else{
+        } else {
             callBack(false)
         }
     })
