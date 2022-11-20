@@ -167,10 +167,10 @@ handler._check.get = (requestProparties, callBack) => {
 
                 _token.verify(token, jsonCheck.userPhone, (tokenIsValid) => {
                     if (tokenIsValid) {
-                        callBack(200,jsonCheck)
+                        callBack(200, jsonCheck)
                     } else {
-                        callBack(403,{
-                            error:"Authentication failure!"
+                        callBack(403, {
+                            error: "Authentication failure!"
                         })
                     }
                 }
@@ -192,31 +192,100 @@ handler._check.put = (requestProparties, callBack) => {
             ? requestProparties.body.id
             : false;
 
-    const extend =
-        typeof requestProparties.body.extend === "boolean" &&
-        requestProparties.body.extend === true;
+    const protocol =
+        typeof requestProparties.body.protocol === "string" &&
+            ["http", "https"].indexOf(requestProparties.body.protocol) > -1
+            ? requestProparties.body.protocol
+            : false;
 
-    if ((id, extend)) {
-        data.read("tokens", id, (err1, tokenData) => {
-            const tokenObject = jsonformat(tokenData);
-            if (tokenObject.expires > Date.now()) {
-                tokenObject.expires = Date.now() + 60 * 60 * 1000;
-                data.update("tokens", id, tokenObject, (err2) => {
-                    if (!err2) {
-                        callBack(200);
-                    } else {
-                        callBack(500, {
-                            error: "There was a problem in sever side",
-                        });
-                    }
-                });
-            } else {
-                callBack(400, {
-                    error: "your token expire already expired!",
-                });
-            }
+    const url =
+        typeof requestProparties.body.url === "string" &&
+            requestProparties.body.url.trim().length > 0
+            ? requestProparties.body.url
+            : false;
+
+    const method =
+        typeof requestProparties.body.method === "string" &&
+            ["GET", "POST", "PUT", "DELETE"].indexOf(requestProparties.body.method) > -1
+            ? requestProparties.body.method
+            : false;
+
+    const successCodes =
+        typeof requestProparties.body.successCode === "object" &&
+            requestProparties.body.successCode instanceof Array
+            ? requestProparties.body.successCode
+            : [];
+          
+
+    const timeSecends =
+        typeof requestProparties.body.timeSecends === "number" &&
+            requestProparties.body.timeSecends % 1 === 0 &&
+            requestProparties.body.timeSecends >= 1 &&
+            requestProparties.body.timeSecends <= 5
+            ? requestProparties.body.timeSecends
+            : false;
+
+    if (id) {
+        if(protocol || url || method || successCodes || timeSecends) {
+            data.read("checks", id, (err, checkData) => {
+                if (!err && checkData) {
+                    const checkObject = jsonformat(checkData);
+                    const token =
+                        typeof requestProparties.headersObject.token === "string"
+                            ? requestProparties.headersObject.token
+                            : false;
+    
+                    _token.verify(token, checkObject.userPhone, (tokenIsValid) => {
+                        if (tokenIsValid) {
+                            if (protocol) {
+                                checkObject.protocol = protocol
+                            }
+                            if (url) {
+                                checkObject.url = url
+                            }
+                            if (method) {
+                                checkObject.method = method
+                            }
+                            if (successCodes) {
+                                checkObject.successCodes = successCodes
+                            }
+                            if (timeSecends) {
+                                checkObject.timeSecends = timeSecends
+                            }
+                            data.update('checks',id,checkObject,(err) => {
+                                if(!err) {
+                                    callBack(200)
+                                } else {
+                                    callBack(500, {
+                                        error: "server side error!"
+                                    })
+                                }
+                            })
+                        } else {
+                            callBack(403, {
+                                error: "Authentication failure!"
+                            })
+                        }
+                    })
+    
+                } else {
+                    callBack(400, {
+                        error: "You have a problem in your request",
+                    });
+                }
+            })
+        } else {
+            callBack(400, {
+                error: "You have a problem in your request",
+            });
+        }
+    } else {
+        callBack(400, {
+            error: "You have a problem in your request",
         });
     }
+
+
 };
 
 handler._check.delete = (requestProparties, callBack) => {
