@@ -13,22 +13,22 @@ const { jsonformat } = require('../helpers/utilities/utilities')
 // scaffoding - object module
 const handler = {};
 
-handler.tokenHandler = (requestProparties, callBack) => {
+handler.checkHandler = (requestProparties, callBack) => {
 
     const acceptMethod = ["post", "get", "put", "delete"];
 
     if (acceptMethod.indexOf(requestProparties.method) > -1) {
-        handler._token[requestProparties.method](requestProparties, callBack);
+        handler._check[requestProparties.method](requestProparties, callBack);
     } else {
         callBack(405);
     }
 };
 
 // service _ use & scaffolding
-handler._token = {};
+handler._check = {};
 
 // is public route for any clind login
-handler._token.post = (requestProparties, callBack) => {
+handler._check.post = (requestProparties, callBack) => {
     const phone =
         typeof requestProparties.body.phone === "string" &&
             requestProparties.body.phone.trim().length === 11
@@ -73,7 +73,7 @@ handler._token.post = (requestProparties, callBack) => {
 };
 
 
-handler._token.get = (requestProparties, callBack) => {
+handler._check.get = (requestProparties, callBack) => {
     const id =
         typeof requestProparties.queryString.id === 'string' &&
             requestProparties.queryString.id.trim().length === 20
@@ -98,7 +98,7 @@ handler._token.get = (requestProparties, callBack) => {
     }
 };
 
-handler._token.put = (requestProparties, callBack) => {
+handler._check.put = (requestProparties, callBack) => {
     const id =
         typeof requestProparties.body.id === 'string' &&
             requestProparties.body.id.trim().length === 20
@@ -131,7 +131,7 @@ handler._token.put = (requestProparties, callBack) => {
 
 };
 
-handler._token.delete = (requestProparties, callBack) => {
+handler._check.delete = (requestProparties, callBack) => {
     const id =
         typeof requestProparties.queryString.id === 'string' &&
             requestProparties.queryString.id.trim().length === 20
@@ -157,21 +157,6 @@ handler._token.delete = (requestProparties, callBack) => {
     }
 };
 
-
-// token verify (ulitility)
-handler._token.verify = (id, phone, callBack) => {
-    data.read('tokens', id, (err, tokenData) => {
-        if (!err && tokenData) {
-            if (jsonformat(tokenData).phone === phone && jsonformat(tokenData).expires > Date.now()) {
-                callBack(true)
-            } else {
-                callBack(false)
-            }
-        } else {
-            callBack(false)
-        }
-    })
-}
 
 
 module.exports = handler;
