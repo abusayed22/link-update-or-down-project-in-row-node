@@ -296,11 +296,54 @@ handler._check.delete = (requestProparties, callBack) => {
             : false;
 
     if (id) {
-        data.delete("tokens", id, (err1) => {
-            if (!err1) {
-                callBack(200, {
-                    message: "There was deleted successfully!",
-                });
+        data.read("checks", id, (err1,checkData) => {
+            if (!err1 && checkData) {
+                const checkObject = jsonformat(checkData);
+                const token =
+                        typeof requestProparties.headersObject.token === "string"
+                            ? requestProparties.headersObject.token
+                            : false;
+
+                _token.verify(token, checkObject.userPhone, (tokenIsValid) => {
+                    if (tokenIsValid) {
+                        data.delete('checks',id,(err5) => {
+                            if(!err5) {
+                                data.read('users',checkObject.userPhone,(err6,userData)=> {
+                                    if(!err6 && userData) {
+                                        const userObject = jsonformat(userData);
+                                        // check type
+                                        const checkuser = typeof userObject.check === 'object' && userData.check instanceof Array ?userData.check: [];
+                                        const checkPosition = checkuser.indexOf(id);
+                                        // remove the check array
+                                        if(checkPosition > -1) {
+                                            checkuser.splice(checkPosition , 1);
+                                        };
+                                        // resave user
+                                        userObject.check = checkuser
+                                        data.update('users',userObject.phone,userObject,(err7) => {
+                                            if(!err7) {
+                                                callBack(200)
+                                            } else {
+                                                callBack(500,{
+                                                    error: "server error!"
+                                                })
+                                            }
+                                        })
+                                    }else {
+                                        callBack(500, {
+                                            error: "server error!"
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                        
+                    } else {
+                        callBack(403, {
+                            error: "Authentication failure!"
+                        })
+                    }
+                })
             } else {
                 callBack(400, {
                     error: "your delete request was not deleted!",
