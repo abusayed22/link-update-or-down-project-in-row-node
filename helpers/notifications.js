@@ -22,7 +22,8 @@ notifications.sendTwilioSms = (phone, msg, callback) => {
     const msg = typeof msg === 'string' && msg.trim().length > 0 && msg.trim().length <=1600? msg.trim() : false;
 
     if(phone && msg) {
-
+        
+        // confiqure the request payload
         const payload = {
             from: twilio.from,
             to:`+88${phone}`,
@@ -31,6 +32,17 @@ notifications.sendTwilioSms = (phone, msg, callback) => {
 
         // stringfy the payload
         const stringfyPayload = queryString.stringify(payload);
+
+        // confiqure the request object
+        const requestObject = {
+            hostName: api.twilio.com,
+            method: POST,
+            path: `2010-04-01/Accounts/${twilio.accountSid}/Messages.json`,
+            auth: `${twilio.accountSid}:${twilio.authToken}`
+        };
+
+        // instantiate the request object
+
     }else {
         callback('Given parameters wherer missing or invalid!')
     }

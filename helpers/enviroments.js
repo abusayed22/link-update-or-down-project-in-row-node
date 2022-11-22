@@ -17,7 +17,9 @@ enviroments.developing = {
     hashingKey: 'taebsctd',
     maxCheck: 5,
     twilio: {
-        from: '68987566'
+        from: '68987566',
+        accountSid: 'HSDLFJ',  // TODO: 
+        authToken: 'sdjf' // TODO: 
     }
 }
 enviroments.production = {
