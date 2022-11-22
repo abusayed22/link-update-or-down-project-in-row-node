@@ -16,6 +16,9 @@ enviroments.developing = {
     envName: 'developing',
     hashingKey: 'taebsctd',
     maxCheck: 5,
+    twilio: {
+        from: '68987566'
+    }
 }
 enviroments.production = {
     port: 5000,

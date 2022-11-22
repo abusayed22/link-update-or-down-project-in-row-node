@@ -7,6 +7,8 @@
 
 // defendencies
 const https = require('https');
+const {twilio} = require('./enviroments');
+const queryString = require('querystring')
 
 
 
@@ -19,7 +21,19 @@ notifications.sendTwilioSms = (phone, msg, callback) => {
     const phone = typeof phone === 'string' && phone.trim().length === 11 ? phone.trim() : false;
     const msg = typeof msg === 'string' && msg.trim().length > 0 && msg.trim().length <=1600? msg.trim() : false;
 
-    
+    if(phone && msg) {
+
+        const payload = {
+            from: twilio.from,
+            to:`+88${phone}`,
+            body: msg
+        };
+
+        // stringfy the payload
+        const stringfyPayload = queryString.stringify(payload);
+    }else {
+        callback('Given parameters wherer missing or invalid!')
+    }
 };
 
 // export to use twilio
