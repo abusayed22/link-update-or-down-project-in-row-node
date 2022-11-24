@@ -27,6 +27,11 @@ enviroments.production = {
     envName: 'production',
     hashingKey: 'parbocsdoenfaglk',
     maxCheck: 5,
+    twilio: {
+        from: '68987566',
+        accountSid: 'HSDLFJ',  
+        authToken: 'sdjf' 
+    }
 }
 
 // detarmind which enviroment was passed
