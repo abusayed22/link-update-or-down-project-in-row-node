@@ -8,8 +8,7 @@
 // defendencies
 const https = require('https');
 const queryString = require('querystring');
-const { error } = require('console');
-const {twilio} = require('./enviroments')
+const { twilio } = require('./enviroments');
 
 
 
@@ -20,15 +19,15 @@ const notifications = {};
 notifications.sendTwilioSms = (phone, msg, callback) => {
     // checking phone msg are ok!
     const userPhone = typeof phone === 'string' && phone.trim().length === 11 ? phone.trim() : false;
-    const userMsg = typeof msg === 'string' && msg.trim().length > 0 && msg.trim().length <=1600? msg.trim() : false;
+    const userMsg = typeof msg === 'string' && msg.trim().length > 0 && msg.trim().length <= 1600 ? msg.trim() : false;
 
-    if(userPhone && userMsg) {
-        
+    if (userPhone && userMsg) {
+
         // confiqure the request payload
         const payload = {
             from: twilio.from,
-            to:`+88${userPhone}`,
-            body: userMsg
+            To: `+88${userPhone}`,
+            Body: userMsg
         };
 
         // stringfy the payload
@@ -49,15 +48,16 @@ notifications.sendTwilioSms = (phone, msg, callback) => {
         // instantiate the request object
         const req = https.request(requestDetails, (res) => {
             // initiate response code
-            const statusCode = res.statusCode
+            const statusC = res.statusCode
 
             // checking code is true & 
-            if(statusCode === 200 || statusCode === 201) {
+            if (statusC === 200 || statusC === 201) {
                 callback(false)
             } else {
-                callback(`status code was returnd ${statusCode}`)
+                callback(`:Status code was returnd ${statusC}`)
             }
         });
+        
 
         req.on("error", (e) => {
             callback(e)
@@ -66,8 +66,8 @@ notifications.sendTwilioSms = (phone, msg, callback) => {
         req.write(stringfyPayload);
         req.end();
 
-    }else {
-        // callback('Given parameters were missing or invalid!');
+    } else {
+        callback('Given parameters were missing or invalid!');
     }
 };
 

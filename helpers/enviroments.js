@@ -17,9 +17,9 @@ enviroments.developing = {
     hashingKey: 'taebsctd',
     maxCheck: 5,
     twilio: {
-        from: '68987566',
-        accountSid: 'HSDLFJ',  // TODO: 
-        authToken: 'sdjf' // TODO: 
+        from: '01911710646',
+        accountSid: 'AC3560425ff298b12ed96e3398c0c01fa6',  
+        authToken: '19e6883c8da820836b4f2a634e7e64a8' 
     }
 }
 enviroments.production = {
@@ -29,8 +29,8 @@ enviroments.production = {
     maxCheck: 5,
     twilio: {
         from: '68987566',
-        accountSid: 'HSDLFJ',  
-        authToken: 'sdjf' 
+        accountSid: 'AC3560425ff298b12ed96e3398c0c01fa6',  
+        authToken: '19e6883c8da820836b4f2a634e7e64a8' 
     }
 }
 
