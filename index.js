@@ -6,13 +6,8 @@
 */
 
 // defendences
-const http = require('http');
-const { handleReqRes } = require('./helpers/handleReqRes');
-const enviroment = require('./helpers/enviroments');
-const lib = require('./lib/data');
-const {sendTwilioSms} = require('./helpers/notifications');
-const {server} = require('./lib/server')
-const {worker} = require('./lib/worker')
+const server = require('./lib/server')
+const worker = require('./lib/worker')
 
 
 // scaffolding - object module
